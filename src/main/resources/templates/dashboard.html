@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard AutoAlert</title>
+    <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet" />
+    <style>
+        body {
+          font-family: 'Roboto', sans-serif;
+          background: #f0f4f8;
+          padding: 20px;
+          color: #2d3436;
+        }
+        h1 {
+          font-family: 'Poppins', sans-serif;
+          color: #0984e3;
+          margin-bottom: 20px;
+          text-align: center;
+        }
+        .container {
+          max-width: 900px;
+          margin: auto;
+          background: white;
+          padding: 30px;
+          border-radius: 16px;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .reminders {
+          background-color: #ffeaa7;
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 30px;
+          font-weight: 600;
+          color: #2d3436;
+        }
+        ul {
+          list-style: none;
+          padding-left: 0;
+        }
+        li {
+          margin-bottom: 12px;
+          font-weight: 600;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #ddd;
+          padding: 10px 0;
+        }
+        .car-info {
+          flex-grow: 1;
+        }
+        .status-indicator {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          margin-right: 10px;
+          display: inline-block;
+        }
+        .status-valid {
+          background-color: #00b894;
+        }
+        .status-warning {
+          background-color: #fdcb6e;
+        }
+        .status-expired {
+          background-color: #d63031;
+        }
+        .actions button, .actions a {
+          margin-left: 10px;
+          padding: 6px 12px;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          font-size: 0.9rem;
+          text-decoration: none;
+          color: white;
+        }
+        .actions button.edit {
+          background-color: #0984e3;
+        }
+        .actions button.edit:hover {
+          background-color: #0c6fd1;
+        }
+        .actions button.delete {
+          background-color: #d63031;
+        }
+        .actions button.delete:hover {
+          background-color: #b3241c;
+        }
+        .actions a.view-docs {
+          background-color: #6c5ce7;
+          display: inline-block;
+        }
+        .actions a.view-docs:hover {
+          background-color: #4e3cbc;
+        }
+        form {
+          margin-top: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 15px;
+          border-top: 1px solid #ccc;
+          padding-top: 30px;
+        }
+        label {
+          font-weight: 600;
+        }
+        input[type="text"], select {
+          padding: 10px;
+          font-size: 1rem;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        button.submit-btn {
+          background-color: #0984e3;
+          color: white;
+          border: none;
+          padding: 14px;
+          border-radius: 50px;
+          font-weight: bold;
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+        button.submit-btn:hover {
+          background-color: #0c6fd1;
+        }
+        .error {
+          color: #d63031;
+          font-size: 0.9rem;
+        }
+        /* Edit form popup */
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 9999;
+          left: 0; top: 0;
+          width: 100%; height: 100%;
+          overflow: auto;
+          background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+          background-color: #fefefe;
+          margin: 10% auto;
+          padding: 20px;
+          border-radius: 16px;
+          width: 400px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content label {
+          font-weight: 600;
+          display: block;
+          margin-bottom: 5px;
+        }
+        .modal-content input {
+          width: 100%;
+          padding: 8px;
+          margin-bottom: 15px;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+        }
+        .modal-buttons {
+          display: flex;
+          justify-content: flex-end;
+          gap: 10px;
+        }
+        .modal-buttons button {
+          padding: 8px 14px;
+          border-radius: 50px;
+          font-weight: 600;
+          border: none;
+          cursor: pointer;
+        }
+        .modal-buttons button.save {
+          background-color: #0984e3;
+          color: white;
+        }
+        .modal-buttons button.cancel {
+          background-color: #b2bec3;
+          color: #2d3436;
+        }
+
+        .export-dropdown {
+          position: relative;
+          display: inline-block;
+          margin-top: 20px;
+          user-select: none;
+        }
+        .export-dropdown > button {
+          background-color:#6c5ce7;
+          color: white;
+          border:none;
+          padding: 12px 20px;
+          border-radius: 50px;
+          font-weight: 600;
+          cursor:pointer;
+          transition: background 0.3s ease;
+        }
+        .export-dropdown > button:hover {
+          background-color: #5946d2;
+        }
+        #exportDropdownContent {
+          display: none;
+          position: absolute;
+          background-color: white;
+          min-width: 160px;
+          box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+          border-radius: 8px;
+          z-index: 1000;
+          margin-top: 8px;
+          padding: 5px 0;
+        }
+        #exportDropdownContent a {
+          padding: 12px 16px;
+          display: block;
+          color: black;
+          text-decoration: none;
+        }
+        #exportDropdownContent a:hover {
+          background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Dashboard AutoAlert</h1>
+
+    <div class="reminders" th:if="${reminders != null and !reminders.isEmpty()}">
+        <h3>Remindere importante:</h3>
+        <ul>
+            <li th:each="reminder : ${reminders}" th:text="${reminder}">Reminder text</li>
+        </ul>
+    </div>
+
+    <div class="car-list">
+        <h2>Mașinile tale</h2>
+        <ul>
+            <li th:each="car : ${cars}">
+                <div class="car-info">
+                    <span class="status-indicator"
+                          th:classappend="${carStatus[car.id] == 'valid' ? ' status-valid' :
+                          (carStatus[car.id] == 'warning' ? ' status-warning' :
+                          (carStatus[car.id] == 'expired' ? ' status-expired' : ''))}"></span>
+                    <span th:text="${car.brand} + ' ' + ${car.model}">Marca Model</span>
+                    <br/>
+                    <small>Număr înmatriculare: <span th:text="${car.licensePlate}">B123ABC</span></small>
+                </div>
+                <div class="actions">
+                    <a th:href="@{'/dashboard/cars/' + ${car.id} + '/documents'}" class="view-docs" title="Vezi documente">📄 Documente</a>
+                    <button class="edit" type="button" th:attr="data-id=${car.id}" onclick="openEditModal(this)">✏️ Editează</button>
+                    <form th:action="@{'/dashboard/cars/' + ${car.id} + '/delete'}" method="post" style="display:inline">
+                        <button type="submit" class="delete" onclick="return confirm('Ești sigur că vrei să ștergi această mașină?')">🗑️ Șterge</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <div th:if="${cars.size() == 0}">
+            Nu ai încă nicio mașină adăugată.
+        </div>
+    </div>
+
+    <div class="export-dropdown">
+        <button id="exportBtn">📤 Exportă lista mașinilor (PDF/Excel)</button>
+        <div id="exportDropdownContent">
+            <a href="/dashboard/cars/export">Excel</a>
+            <a href="/dashboard/cars/export/pdf">PDF</a>
+        </div>
+    </div>
+
+    <form th:action="@{/dashboard/cars/add}" th:object="${carDto}" method="post">
+        <h2>Adaugă o mașină nouă</h2>
+
+        <label for="brand">Marcă:</label>
+        <select id="brand" th:field="*{brand}" required onchange="updateModels()">
+            <option value="" disabled selected>Alege marca</option>
+            <option th:each="brand : ${brands}" th:value="${brand}" th:text="${brand}"></option>
+        </select>
+        <p class="error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></p>
+
+        <label for="model">Model:</label>
+        <select id="model" th:field="*{model}" required disabled>
+            <option value="" disabled selected>Alege modelul</option>
+        </select>
+        <p class="error" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></p>
+
+        <label for="licensePlate">Număr înmatriculare:</label>
+        <input type="text" id="licensePlate" th:field="*{licensePlate}" placeholder="Ex: B123ABC" required
+               oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase;" />
+        <p class="error" th:if="${#fields.hasErrors('licensePlate')}" th:errors="*{licensePlate}"></p>
+
+
+        <button type="submit" class="submit-btn">Adaugă mașina</button>
+    </form>
+</div>
+
+<div id="premiumModal" class="modal" th:if="${showPremiumModal}">
+    <div class="modal-content">
+        <h3>Funcționalitate PREMIUM</h3>
+        <p>Pentru a adăuga mai multe mașini, trebuie să ai un cont PREMIUM.</p>
+        <div class="modal-buttons" style="justify-content: center; gap: 20px;">
+            <button onclick="closePremiumModal()" class="cancel">Anulează</button>
+            <a href="/upgrade" class="save" style="text-decoration:none; display:inline-block; padding: 8px 14px; border-radius:50px; background-color:#0984e3; color:white; font-weight:600;">Fă upgrade acum</a>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content">
+        <h3>Editează mașina</h3>
+        <form id="editCarForm" method="post" th:action="@{/dashboard/cars/{carId}/edit(carId=${editCarId})}" th:object="${carDto}">
+            <label for="editBrand">Marcă:</label>
+            <input type="text" id="editBrand" th:field="*{brand}" required />
+            <p class="error" th:if="${#fields.hasErrors('brand')}" th:errors="*{brand}"></p>
+
+            <label for="editModel">Model:</label>
+            <input type="text" id="editModel" th:field="*{model}" required />
+            <p class="error" th:if="${#fields.hasErrors('model')}" th:errors="*{model}"></p>
+
+            <label for="editLicensePlate">Număr înmatriculare:</label>
+            <input type="text" id="editLicensePlate" th:field="*{licensePlate}" required
+                   oninput="this.value = this.value.toUpperCase()" style="text-transform: uppercase;" />
+            <p class="error" th:if="${#fields.hasErrors('licensePlate')}" th:errors="*{licensePlate}"></p>
+
+            <div class="modal-buttons">
+                <button type="button" class="cancel" onclick="closeEditModal()">Anulează</button>
+                <button type="submit" class="save">Salvează</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    <script th:inline="javascript">
+   /*<![CDATA[*/
+   const modelsByBrand = /*[[${modelsByBrandJson}]]*/ '{}';
+   const modelsByBrandObj = JSON.parse(modelsByBrand);
+
+   function updateModels() {
+       const brandSelect = document.getElementById('brand');
+       const modelSelect = document.getElementById('model');
+       const selectedBrand = brandSelect.value;
+
+       modelSelect.innerHTML = '<option value="" disabled selected>Alege modelul</option>';
+
+       if (selectedBrand && modelsByBrandObj[selectedBrand]) {
+           modelsByBrandObj[selectedBrand].forEach(model => {
+               const option = document.createElement('option');
+               option.value = model;
+               option.text = model;
+               modelSelect.appendChild(option);
+           });
+           modelSelect.disabled = false;
+       } else {
+           modelSelect.disabled = true;
+       }
+   }
+
+       window.onload = () => {
+           document.getElementById('model').disabled = true;
+
+           const premiumModal = document.getElementById('premiumModal');
+           if (premiumModal) {
+               premiumModal.style.display = 'block';
+           }
+       };
+
+
+       function openEditModal(button) {
+           const carId = button.getAttribute('data-id');
+           const li = button.closest('li');
+
+           const fullText = li.querySelector('.car-info span:nth-child(2)').textContent.trim();
+           const [brand, ...modelParts] = fullText.split(' ');
+           const model = modelParts.join(' ');
+           const licensePlate = li.querySelector('small span').textContent.trim();
+
+           document.getElementById('editBrand').value = brand;
+           document.getElementById('editModel').value = model;
+           document.getElementById('editLicensePlate').value = licensePlate;
+
+           const form = document.getElementById('editCarForm');
+           form.action = `/dashboard/cars/${carId}/edit`;
+
+           document.getElementById('editModal').style.display = 'block';
+       }
+
+       function closeEditModal() {
+           document.getElementById('editModal').style.display = 'none';
+       }
+
+
+       function closePremiumModal() {
+           const premiumModal = document.getElementById('premiumModal');
+           if (premiumModal) {
+               premiumModal.style.display = 'none';
+           }
+       }
+
+
+       const exportBtn = document.getElementById('exportBtn');
+       const dropdownContent = document.getElementById('exportDropdownContent');
+
+       exportBtn.addEventListener('click', (e) => {
+           e.stopPropagation();
+           if (dropdownContent.style.display === 'block') {
+               dropdownContent.style.display = 'none';
+           } else {
+               dropdownContent.style.display = 'block';
+           }
+       });
+
+       window.onclick = function(event) {
+           if (!event.target.closest('.export-dropdown')) {
+               dropdownContent.style.display = 'none';
+           }
+           const premiumModal = document.getElementById('premiumModal');
+           if (premiumModal && event.target === premiumModal) {
+               premiumModal.style.display = 'none';
+           }
+           const editModal = document.getElementById('editModal');
+           if (editModal && event.target === editModal) {
+               editModal.style.display = 'none';
+           }
+       };
+</script>
+</body>
+</html>

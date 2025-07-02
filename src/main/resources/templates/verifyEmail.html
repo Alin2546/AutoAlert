@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verifică Emailul – AutoAlert 🚗</title>
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #dfe6e9, #81ecec);
+      color: #2d3436;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .verify-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      color: #00cec9;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+    label {
+      display: block;
+      text-align: left;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #dcdde1;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background: #00cec9;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #55efc4;
+    }
+    .error {
+      color: #d63031;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="verify-container">
+  <h1>Verificare email</h1>
+  <p>Am trimis un cod de verificare pe adresa: <b th:text="${email}"></b></p>
+
+  <form th:action="@{/verifyCode}" method="post">
+    <input type="hidden" name="email" th:value="${email}"/>
+
+    <label>Cod de verificare:</label>
+    <input type="text" name="verificationCode" required>
+
+    <button type="submit">Verifică</button>
+  </form>
+
+  <p class="error" th:if="${error}" th:text="${error}"></p>
+</div>
+</body>
+</html>

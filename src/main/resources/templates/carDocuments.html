@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Documente Mașină – AutoAlert</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #f0f4f8;
+      padding: 20px;
+      color: #2d3436;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      font-family: 'Poppins', sans-serif;
+      color: #0984e3;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+    }
+    th, td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #0984e3;
+      color: white;
+      font-weight: 600;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: 600;
+    }
+    select, input[type="date"] {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #0984e3;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #0c6fd1;
+    }
+    .error {
+      color: #d63031;
+      font-size: 0.9rem;
+    }
+    .back-link {
+      display: block;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #0984e3;
+      text-decoration: none;
+      text-align: center;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .btn-edit-date {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Documente pentru</h1>
+  <h2 th:text="${car.brand} + ' ' + ${car.model}"></h2>
+
+  <a th:href="@{/dashboard}" class="back-link">&larr; Înapoi la dashboard</a>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Tip document</th>
+      <th>Data expirării</th>
+      <th>Acțiuni</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="doc : ${documents}">
+      <td th:text="${doc.documentType}">Tip</td>
+      <td th:text="${doc.expiryDate}">Data</td>
+      <td>
+
+        <button type="button"
+                class="btn btn-primary btn-sm btn-edit-date"
+                data-bs-toggle="modal"
+                th:attr="data-bs-target='#editEndDateModal__' + ${doc.id}">
+          Editează data
+        </button>
+
+        <form th:action="@{'/dashboard/cars/' + ${car.id} + '/documents/' + ${doc.id} + '/delete'}"
+              method="post"
+              style="display:inline"
+              onsubmit="return confirm('Sigur vrei să ștergi acest document?');">
+          <button class="btn btn-danger btn-sm" type="submit">Șterge</button>
+        </form>
+      </td>
+    </tr>
+    <tr th:if="${documents.size() == 0}">
+      <td colspan="3" style="text-align:center;">Nu există documente pentru această mașină.</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <form th:action="@{'/dashboard/cars/' + ${car.id} + '/documents/add'}" th:object="${carDocumentDto}" method="post">
+    <h2>Adaugă document nou</h2>
+
+    <label for="documentType">Tip document:</label>
+    <select id="documentType" th:field="*{documentType}" required>
+      <option th:value="ROVINIETA">Rovinietă</option>
+      <option th:value="CASCO">CASCO</option>
+      <option th:value="ITP">ITP</option>
+      <option th:value="ASIGURARE">Asigurare</option>
+      <option th:value="RCA">RCA</option>
+      <option th:value="ALTE_DOCUMENTE">Alte documente</option>
+    </select>
+    <p class="error" th:if="${#fields.hasErrors('documentType')}" th:errors="*{documentType}"></p>
+
+    <label for="expiryDate">Data expirării:</label>
+    <input type="date" id="expiryDate" th:field="*{expiryDate}" required />
+    <p class="error" th:if="${#fields.hasErrors('expiryDate')}" th:errors="*{expiryDate}"></p>
+    <div th:if="${errorMessage}" style="color: red; font-weight: bold; margin-bottom: 15px;" th:text="${errorMessage}"></div>
+    <button type="submit">Adaugă document</button>
+  </form>
+</div>
+
+
+<th:block th:each="doc : ${documents}">
+  <div class="modal fade" th:id="'editEndDateModal__' + ${doc.id}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form th:action="@{'/dashboard/cars/' + ${car.id} + '/documents/' + ${doc.id} + '/editEndDate'}" method="post">
+          <div class="modal-header">
+            <h5 class="modal-title">Editează data de expirare</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Închide"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label th:for="'endDateInput__' + ${doc.id}" class="form-label">Data expirării:</label>
+              <input type="date"
+                     class="form-control"
+                     th:id="'endDateInput__' + ${doc.id}"
+                     name="endDate"
+                     th:value="${doc.expiryDate}"
+                     required />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anulează</button>
+            <button type="submit" class="btn btn-primary">Salvează</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</th:block>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

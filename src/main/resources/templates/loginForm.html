@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autentificare – AutoAlert 🚗</title>
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #dff9fb, #74b9ff);
+      color: #2d3436;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .login-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+      color: #0984e3;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2d3436;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #dcdde1;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background: #0984e3;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #74b9ff;
+    }
+    .forgot-link {
+      display: block;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.95rem;
+      color: #0984e3;
+      text-decoration: none;
+    }
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <h1>Autentificare AutoAlert</h1>
+  <form method="post" action="/login">
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Parolă:</label>
+    <input type="password" name="password" required>
+
+    <button type="submit">Autentifică-te</button>
+  </form>
+  <div style="text-align: center; margin: 30px 0 10px; font-weight: bold; color: #636e72;">
+    sau continuă cu
+  </div>
+
+  <!-- Mesaj de eroare -->
+  <div th:if="${param.error}" style="color: #d63031; background: #ffeaea; padding: 12px 20px; border-radius: 10px; margin-top: 20px; text-align: center;">
+    Email sau parolă incorecte. Încearcă din nou.
+  </div>
+
+
+  <a class="forgot-link" href="/forgotPassword">Ai uitat parola?</a>
+</div>
+</body>
+</html>

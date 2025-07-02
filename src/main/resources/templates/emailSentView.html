@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Email trimis – AutoAlert</title>
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #dfe6e9, #74b9ff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: #2d3436;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      color: #0984e3;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 25px;
+    }
+    a {
+      display: inline-block;
+      padding: 14px 30px;
+      background-color: #0984e3;
+      color: white;
+      border-radius: 50px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+    a:hover {
+      background-color: #0c6fd1;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Verifică inboxul tău</h1>
+  <p>Am trimis un email de resetare a parolei către: <b th:text="${email}"></b></p>
+  <p>Verifică emailul și urmează pașii pentru a-ți schimba parola.</p>
+  <a href="/loginForm">Înapoi la autentificare</a>
+</div>
+</body>
+</html>

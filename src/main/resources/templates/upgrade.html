@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upgrade cont - AutoAlert</title>
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet" />
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: #f0f4f8;
+        padding: 20px;
+        color: #2d3436;
+    }
+    .container {
+        max-width: 500px;
+        margin: 80px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    h1 {
+        font-family: 'Poppins', sans-serif;
+        color: #0984e3;
+        margin-bottom: 20px;
+    }
+    p {
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+    }
+    button {
+        background-color: #6c5ce7;
+        color: white;
+        border: none;
+        padding: 14px 40px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    button:hover {
+        background-color: #4e3cbc;
+    }
+    .already-premium {
+        color: #00b894;
+        font-weight: 600;
+    }
+    a.back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #0984e3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+    a.back-link:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<div class="container" th:if="${!isPremium}">
+  <h1>Upgrade cont la PREMIUM</h1>
+  <p>Devino utilizator PREMIUM și adaugă câte mașini dorești în AutoAlert!</p>
+
+  <button id="upgradeBtn">Fă upgrade acum</button>
+
+  <a href="/dashboard" class="back-link">Înapoi la dashboard</a>
+</div>
+
+<div class="container" th:if="${isPremium}">
+  <h1>Ești deja utilizator PREMIUM!</h1>
+  <p class="already-premium">Mulțumim că susții AutoAlert!</p>
+  <a href="/dashboard" class="back-link">Înapoi la dashboard</a>
+</div>
+
+<script>
+  const stripe = Stripe('pk_test_51RE6Yy2Xp6cnh4OlQolvY0GKAqmd09HIU8daGndb3ADEdnKfbW2p4GdKLGjzJ3eBZpJOYJnpcdSiVu8yvJnEOKMg00JtXqXOk0');
+
+  document.getElementById('upgradeBtn')?.addEventListener('click', function () {
+    fetch("/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" }
+    })
+      .then(res => res.json())
+      .then(data => {
+        return stripe.redirectToCheckout({ sessionId: data.id });
+      })
+      .catch(err => console.error(err));
+  });
+</script>
+</body>
+</html>

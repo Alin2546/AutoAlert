@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ro" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Înregistrare – AutoAlert 🚗</title>
+  <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+    body {
+      background: linear-gradient(135deg, #dff9fb, #c7ecee);
+      color: #2d3436;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 20px;
+    }
+    .register-container {
+      background: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      color: #0984e3;
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #2d3436;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid #dfe6e9;
+      font-size: 1rem;
+      background-color: #f9f9f9;
+    }
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    .checkbox-label a {
+      color: #0984e3;
+      margin: 0 5px;
+      text-decoration: underline;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: white;
+      background: #0984e3;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #74b9ff;
+    }
+    .error {
+      color: #d63031;
+      font-size: 0.9rem;
+      margin-top: -15px;
+      margin-bottom: 10px;
+    }
+    .login-link {
+      text-align: center;
+      margin-top: 25px;
+      font-size: 0.95rem;
+    }
+    .login-link a {
+      color: #0984e3;
+      font-weight: 600;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="register-container">
+  <h1>Înregistrează-te pe AutoAlert</h1>
+  <form th:action="@{/register}" th:object="${userCreateDto}" method="post">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" th:field="*{email}" required>
+    <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+    <label for="password">Parolă</label>
+    <input type="password" id="password" th:field="*{password}" required>
+
+    <label for="verifyPassword">Confirmă Parola</label>
+    <input type="password" id="verifyPassword" th:field="*{verifyPassword}" required>
+    <p class="error" th:if="${#fields.hasErrors('verifyPassword')}" th:errors="*{verifyPassword}"></p>
+
+    <div style="margin-bottom: 20px;">
+      <label class="checkbox-label">
+        <input type="checkbox" id="agreeCheckbox" style="margin-right: 10px;">
+        Sunt de acord cu
+        <a href="/terms" target="_blank">Termenii și Condițiile</a> și
+        <a href="/privacyPolicy" target="_blank">Politica de Confidențialitate</a>
+      </label>
+      <p id="checkboxError" class="error" style="display: none;">Trebuie să accepți termenii pentru a continua.</p>
+    </div>
+
+
+    <button type="submit">Creează contul</button>
+  </form>
+
+  <p class="login-link">
+    Ai deja un cont? <a href="/loginForm">Autentifică-te aici</a>.
+  </p>
+</div>
+
+<script>
+  document.querySelector("form").addEventListener("submit", function (e) {
+    const checkbox = document.getElementById("agreeCheckbox");
+    const errorMsg = document.getElementById("checkboxError");
+
+    if (!checkbox.checked) {
+      e.preventDefault();
+      errorMsg.style.display = "block";
+    } else {
+      errorMsg.style.display = "none";
+    }
+  });
+</script>
+</body>
+</html>

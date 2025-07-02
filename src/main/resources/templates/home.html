@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AutoAlert – Reminder Mașină Smart 🚗💡</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" href="AutoAlert Logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Roboto&display=swap" rel="stylesheet">
+    <style>
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+          background: linear-gradient(135deg, #74b9ff, #2e86de);
+          color: #1a1a1a;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          scroll-behavior: smooth;
+        }
+
+        header {
+          background: rgba(0, 0, 0, 0.05);
+          padding: 20px 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          color: white;
+        }
+
+        .logo {
+          font-family: 'Poppins', sans-serif;
+          font-size: 2rem;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        nav a {
+          color: white;
+          margin-left: 20px;
+          text-decoration: none;
+          font-weight: bold;
+          transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+          color: #ffeaa7;
+        }
+
+        main {
+          padding: 60px 20px;
+          text-align: center;
+        }
+
+        h1 {
+          font-size: 3rem;
+          margin-bottom: 20px;
+          color: #000f06;
+        }
+
+        p.lead {
+          font-size: 1.4rem;
+          max-width: 700px;
+          margin: auto;
+          margin-bottom: 40px;
+        }
+
+        .btn-primary {
+  background: #2e86de;
+  color: white;
+  font-weight: 700;
+  padding: 16px 50px;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(46, 134, 222, 0.6);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  animation: pulseHover 1.5s infinite;
+  background: #0984e3;
+  box-shadow: 0 0 15px 5px rgba(9, 132, 227, 0.7);
+}
+
+@keyframes pulseHover {
+  0% {
+    box-shadow: 0 0 15px 5px rgba(9, 132, 227, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 25px 10px rgba(9, 132, 227, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 15px 5px rgba(9, 132, 227, 0.7);
+  }
+}
+
+        section {
+          padding: 60px 20px;
+        }
+
+        .features, .how-it-works {
+          display: flex;
+          gap: 40px;
+          flex-wrap: wrap;
+          justify-content: center;
+          max-width: 1000px;
+          margin: auto;
+        }
+
+        .feature, .step {
+          background: rgba(255, 255, 255, 0.9);
+          border-radius: 15px;
+          padding: 30px 25px;
+          flex: 1 1 280px;
+          box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+          transition: transform 0.3s ease;
+        }
+
+        .feature:hover, .step:hover {
+          transform: translateY(-10px);
+        }
+
+        .feature h3, .step h3 {
+          color: #0984e3;
+          margin-bottom: 10px;
+        }
+
+        footer {
+          background: #1a1a1a;
+          color: white;
+          padding: 40px 20px;
+        }
+
+        .footer-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 40px;
+          justify-content: space-between;
+          max-width: 1200px;
+          margin: auto;
+        }
+
+        .footer-column {
+          flex: 1 1 220px;
+        }
+
+        .footer-column h4 {
+          margin-bottom: 15px;
+          font-size: 1.2rem;
+          color: #74b9ff;
+        }
+
+        .footer-column a {
+          color: #dfe6e9;
+          text-decoration: none;
+          display: block;
+          margin-bottom: 10px;
+          font-size: 0.95rem;
+        }
+
+        .footer-column a:hover {
+          color: #ffeaa7;
+        }
+
+        .copyright {
+          text-align: center;
+          margin-top: 30px;
+          font-size: 0.9rem;
+          color: #b2bec3;
+        }
+
+        @keyframes colorShift {
+          0% {
+            color: #1a1a1a;
+          }
+          50% {
+            color: #10ac84;
+            text-shadow: 0 0 20px #55efc4, 0 0 30px #10ac84;
+          }
+          100% {
+            color: #1a1a1a;
+          }
+        }
+
+        @media (max-width: 768px) {
+          header {
+            flex-direction: column;
+            text-align: center;
+          }
+          .features, .how-it-works {
+            flex-direction: column;
+            gap: 20px;
+          }
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">AutoAlert</div>
+    <nav>
+        <a href="/register/form">Înregistrare</a>
+        <a href="/loginForm">Autentificare</a>
+    </nav>
+</header>
+
+<main>
+    <h1>Reminder inteligent pentru mașina ta</h1>
+    <p class="lead">Primește alerte automate pe email pentru ITP, rovinietă și RCA. Fără stres, fără amenzi, fără bătăi de cap.</p>
+    <a href="/register/form" class="btn-primary">Creează-ți contul gratuit</a>
+</main>
+
+<section>
+    <h2 style="text-align:center; margin-bottom:30px;">Funcționalități cheie</h2>
+    <div class="features">
+        <div class="feature">
+            <h3>Salvează vehicule</h3>
+            <p>Adaugă mașina ta și toate informațiile importante într-un singur loc.</p>
+        </div>
+        <div class="feature">
+            <h3>Primiți notificări</h3>
+            <p>Alertă prin email cu 7 zile înainte și în ziua expirării documentelor.</p>
+        </div>
+        <div class="feature">
+            <h3>UI simplu și eficient</h3>
+            <p>Interfață modernă și ușor de folosit de pe orice dispozitiv.</p>
+        </div>
+    </div>
+</section>
+
+<section style="background: #f1f2f6;">
+    <h2 style="text-align:center; margin-bottom:30px;">Cum funcționează?</h2>
+    <div class="how-it-works">
+        <div class="step">
+            <h3>1. Creează contul</h3>
+            <p>Înregistrează-te rapid folosind adresa de email sau contul Google.</p>
+        </div>
+        <div class="step">
+            <h3>2. Adaugă mașina</h3>
+            <p>Completează datele despre ITP, rovinietă, RCA sau CASCO.</p>
+        </div>
+        <div class="step">
+            <h3>3. Primești alerte</h3>
+            <p>Noi îți trimitem notificări automat, tu doar condu liniștit.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-column">
+            <h4>AutoAlert</h4>
+            <p>Aplicația care are grijă de mașina ta. Simplu. Automat. Gratuit.</p>
+        </div>
+
+        <div class="footer-column">
+            <h4>Linkuri utile</h4>
+            <a href="/register/form">Creează cont</a>
+            <a href="/loginForm">Autentificare</a>
+            <a href="/privacyPolicy">Politica de confidențialitate</a>
+            <a href="/terms">Termeni și condiții</a>
+        </div>
+        <div class="footer-column">
+            <h4>Contact</h4>
+            <a href="mailto:support@autoalert.ro">support@autoalert.ro</a>
+            <a href="#">Facebook</a>
+            <a href="#">Instagram</a>
+        </div>
+    </div>
+    <div class="copyright">
+        &copy; 2025 AutoAlert. Toate drepturile rezervate.
+    </div>
+</footer>
+
+</body>
+</html>
